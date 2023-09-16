@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Basic JavaScript</title>
+  <script type="text/javascript" src="rata2.js"></script>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-4bw+/aepP/YC94hEpVNVgiZdgIC5+VKNBQNGCHeKRQN+PtmoHDEXuppvnDJzQIu9" crossorigin="anonymous">
+</head>
+<style>
+  .btn {
+    margin: 20px;
+  }
+
+  .form-container {
+    display: none;
+  }
+
+  .table-container {
+    display: none;
+  }
+</style>
+<body>
+  <div class="d-grid gap-2 d-md-block">
+    <button class="btn btn-primary" type="button" id="registrasi">Registrasi</button>
+    <button class="btn btn-primary" type="button" id="list">List Pendaftar</button>
+  </div>
+  
+  <div class="form-container">
+    <label for="nama" class="form-label">Nama</label>
+    <input type="text" class="form-control" id="nama">
+    
+    <label for="umur" class="form-label">Umur</label>
+    <input type="text" class="form-control" id="umur">
+    
+    <label for="uangsangu" class="form-label">Uang saku</label>
+    <input type="text" class="form-control" id="uangsangu">
+    
+    <button type="button" id="submit" class="btn btn-primary">Submit</button>
+    <div class="alert alert-danger" id="error-message" style="display: none;"></div>
+  </div>
+
+  <div class="table-container">
+    <h2>Data Pendaftar</h2>
+    <table class="table" id="table">
+        <thead>
+            <tr>
+                <th scope="col">#</th>
+                <th scope="col">Nama</th>
+                <th scope="col">Umur</th>
+                <th scope="col">Uang Saku</th>
+            </tr>
+          </thead>
+          <tbody>
+              <!-- Isi tabel akan ditambahkan melalui JavaScript -->
+          </tbody>
+          
+      </table>
+      <div id="average-info">
+        <p>Rata-rata Umur: <span id="average-age"></span> dan Rata-rata Uang Saku: <span id="average-allowance">-</span></p>
+    </div>
+  </div>
+
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/js/bootstrap.bundle.min.js" integrity="sha384-HwwvtgBNo3bZJJLYd8oVXjrBZt8cqVSpeBNS5n7C8IVInixGAoxmnlMuBnhbgrkm" crossorigin="anonymous"></script>
+
+  <script>
+    const registrasiButton = document.getElementById("registrasi");
+    const listButton = document.getElementById("list");
+    const formContainer = document.querySelector(".form-container");
+    const tableContainer = document.querySelector(".table-container");
+    const table = document.getElementById("table").querySelector("tbody");
+    const errorMessage = document.getElementById("error-message");
+
+    registrasiButton.addEventListener("click", () => {
+      formContainer.style.display = "block";
+      tableContainer.style.display = "none";
+      averageInfo.style.display = "none"; // Sembunyikan info rata-rata saat kembali ke form
+      errorMessage.style.display = "none"; // Sembunyikan pesan kesalahan
+    });
+
+    listButton.addEventListener("click", () => {
+      formContainer.style.display = "none";
+      tableContainer.style.display = "block";
+      calculateAndDisplayAverage(); // Tampilkan info rata-rata di bawah tabel
+      errorMessage.style.display = "none"; // Sembunyikan pesan kesalahan
+    });
+
+    const submitButton = document.getElementById("submit");
+
+    submitButton.addEventListener("click", () => {
+      // Dapatkan nilai dari input form
+      const nama = document.getElementById("nama").value;
+      const umurInput = document.getElementById("umur").value;
+      const uangsakuInput = document.getElementById("uangsangu").value;
+
+      // Validasi kriteria
+      if (nama.length < 10) {
+        errorMessage.textContent = "Nama harus memiliki minimal 10 karakter.";
+        errorMessage.style.display = "block";
+        return;
+      } else {
+        errorMessage.style.display = "none"; // Sembunyikan pesan kesalahan jika valid
+      }
+
+      const umur = parseFloat(umurInput);
+      if (isNaN(umur) || umur < 25) {
+        errorMessage.textContent = "Umur harus berupa angka minimal 25 tahun.";
+        errorMessage.style.display = "block";
+        return;
+      } else {
+        errorMessage.style.display = "none"; // Sembunyikan pesan kesalahan jika valid
+      }
+
+      const uangsaku = parseFloat(uangsakuInput);
+      if (isNaN(uangsaku) || uangsaku < 100000 || uangsaku > 1000000) {
+        errorMessage.textContent = "Uang saku harus berupa angka antara 100 ribu hingga 1 juta.";
+        errorMessage.style.display = "block";
+        return;
+      } else {
+        errorMessage.style.display = "none"; // Sembunyikan pesan kesalahan jika valid
+      }
+
+      // Buat baris baru dalam tabel
+      const newRow = document.createElement("tr");
+      newRow.innerHTML = `
+        <th scope="row">${table.childElementCount + 1}</th>
+        <td>${nama}</td>
+        <td>${umur}</td>
+        <td>${uangsaku}</td>
+      `;
+
+      // Tambahkan baris baru ke dalam tabel
+      table.appendChild(newRow);
+
+      // Kosongkan input form
+      document.getElementById("nama").value = "";
+      document.getElementById("umur").value = "";
+      document.getElementById("uangsangu").value = "";
+
+     
+    });
+
+    
+  </script>
+</body>
+</html>
